@@ -43,17 +43,14 @@ public class MinesweeperGame {
             String cellInput = getCellInputFromUser();
             String userActionInput = getActionInputFromUser();
 
-            char cellInputColumn = getSelectedColumnIndex(cellInput);
-            char cellInputRow = getSelectedRowIndex(cellInput);
-
-            int selectedRowIndex = convertRowFrom(cellInputRow);
-            int selectedColumnIndex = convertColumnFrom(cellInputColumn);
-
-            actOnCell(userActionInput, selectedRowIndex, selectedColumnIndex);
+            actOnCell(cellInput, userActionInput);
         }
     }
 
-    private static void actOnCell(String userActionInput, int selectedRowIndex, int selectedColumnIndex) {
+    private static void actOnCell(String cellInput, String userActionInput) {
+        int selectedColumnIndex = getSelectedColumnIndex(cellInput);
+        int selectedRowIndex = getSelectedRowIndex(cellInput);
+
         if (isFlagAction(userActionInput)) {
             BOARD[selectedRowIndex][selectedColumnIndex] = FLAG_SIGN;
             checkGameIsOver();
@@ -88,12 +85,12 @@ public class MinesweeperGame {
         return userActionInput.equals("2");
     }
 
-    private static char getSelectedRowIndex(String cellInput) {
-        return cellInput.charAt(1);
+    private static int getSelectedRowIndex(String cellInput) {
+        return convertRowFrom(cellInput.charAt(1));
     }
 
-    private static char getSelectedColumnIndex(String cellInput) {
-        return cellInput.charAt(0);
+    private static int getSelectedColumnIndex(String cellInput) {
+        return convertColumnFrom(cellInput.charAt(0));
     }
 
     private static String getActionInputFromUser() {

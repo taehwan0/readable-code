@@ -1,18 +1,21 @@
 package cleancode.minesweeper.tobe;
 
 import cleancode.minesweeper.tobe.exception.GameException;
+import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 import cleancode.minesweeper.tobe.io.ConsoleInputHandler;
 import cleancode.minesweeper.tobe.io.ConsoleOutputHandler;
 
 public class MineSweeper {
 
-    public static final int BOARD_ROW_SIZE = 8;
-    public static final int BOARD_COLUMN_SIZE = 10;
-
-    private final GameBoard gameBoard = new GameBoard(BOARD_ROW_SIZE, BOARD_COLUMN_SIZE);
+    private final GameBoard gameBoard;
+    private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
     private final ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
     private final ConsoleOutputHandler consoleOutputHandler = new ConsoleOutputHandler();
     private int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
+
+    public MineSweeper(GameLevel gameLevel) {
+        this.gameBoard = new GameBoard(gameLevel);
+    }
 
     public void run() {
         consoleOutputHandler.showGameStartComments();
@@ -103,41 +106,16 @@ public class MineSweeper {
     }
 
     private int getSelectedRowIndex(String cellInput) {
-        return convertRowFrom(cellInput.charAt(1));
+        String rowInput = cellInput.substring(1);
+        return boardIndexConverter.convertRowFrom(rowInput, gameBoard.getRowSize());
     }
 
     private int getSelectedColumnIndex(String cellInput) {
-        return convertColumnFrom(cellInput.charAt(0));
+        return boardIndexConverter.convertColumnFrom(cellInput.charAt(0), gameBoard.getColumnSize());
     }
 
     private String getActionInputFromUser() {
         consoleOutputHandler.printInputUserActionComment();
         return consoleInputHandler.getUserInput();
-    }
-
-    private int convertRowFrom(char cellInputRow) {
-        int rowIndex = Character.getNumericValue(cellInputRow) - 1;
-
-        if (rowIndex >= BOARD_ROW_SIZE) {
-            throw new GameException("잘못된 좌표(행) 입력입니다. (" + rowIndex + ")");
-        }
-
-        return rowIndex;
-    }
-
-    private int convertColumnFrom(char cellInputColumn) {
-        return switch (cellInputColumn) {
-            case 'a' -> 0;
-            case 'b' -> 1;
-            case 'c' -> 2;
-            case 'd' -> 3;
-            case 'e' -> 4;
-            case 'f' -> 5;
-            case 'g' -> 6;
-            case 'h' -> 7;
-            case 'i' -> 8;
-            case 'j' -> 9;
-            default -> throw new GameException("잘못된 좌표(열) 입력입니다. (" + cellInputColumn + ")");
-        };
     }
 }

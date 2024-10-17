@@ -1,19 +1,20 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 import java.util.Arrays;
 import java.util.Random;
 
 public class GameBoard {
 
-    private static final int LAND_MINE_COUNT = 10;
-
-    private final Cell[][] board;
+    private final int landMineCount;
     private final int rowSize;
     private final int columnSize;
+    private final Cell[][] board;
 
-    public GameBoard(int rowSize, int columnSize) {
-        this.rowSize = rowSize;
-        this.columnSize = columnSize;
+    public GameBoard(GameLevel gameLevel) {
+        this.rowSize = gameLevel.getRowSize();
+        this.columnSize = gameLevel.getColumnSize();
+        this.landMineCount = gameLevel.getLandMineCount();
         this.board = new Cell[rowSize][columnSize];
     }
 
@@ -27,7 +28,7 @@ public class GameBoard {
 
         // board에 10개의 mine을 심는 과정, 중복이 될 수 있을 것으로 보임
         // 총 10개 이하의 mine이 생성될 것으로 유추됨
-        for (int i = 0; i < LAND_MINE_COUNT; i++) {
+        for (int i = 0; i < landMineCount; i++) {
             int col = new Random().nextInt(columnSize);
             int row = new Random().nextInt(rowSize);
             findCell(row, col).plantMine();

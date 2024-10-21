@@ -5,15 +5,17 @@ import cleancode.minesweeper.tobe.exception.GameException;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class ConsoleOutputHandler {
+public class ConsoleOutputHandler implements OutputHandler {
 
+    @Override
     public void showGameStartComments() {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println("지뢰찾기 게임 시작!");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     }
 
-    public void displayBoard(GameBoard gameBoard) {
+    @Override
+    public void showBoard(GameBoard gameBoard) {
         String columnAlphabets = generateColumnAlphabets(gameBoard.getColumnSize());
 
         System.out.println("    " + columnAlphabets);
@@ -35,27 +37,33 @@ public class ConsoleOutputHandler {
         return String.join(" ", alphabet);
     }
 
-    public void printGameLosingComment() {
+    @Override
+    public void showGameLosingComment() {
         System.out.println("지뢰를 밟았습니다. GAME OVER!");
     }
 
-    public void printWinningComment() {
+    @Override
+    public void showWinningComment() {
         System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
     }
 
-    public void printInputCoordinateComment() {
+    @Override
+    public void showInputCoordinateComment() {
         System.out.println("선택할 좌표를 입력하세요. (예: a1)");
     }
 
-    public void printInputUserActionComment() {
+    @Override
+    public void showInputUserActionComment() {
         System.out.println("선택한 셀에 대한 행위를 선택하세요. (1: 오픈, 2: 깃발 꽂기)");
     }
 
-    public void printExceptionMessage(GameException e) {
+    @Override
+    public void showExceptionMessage(GameException e) {
         System.out.println(e.getMessage());
     }
 
-    public void printSimpleExceptionMessage(String message) {
+    @Override
+    public void showSimpleExceptionMessage(String message) {
         System.out.println(message);
     }
 }

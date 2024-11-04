@@ -2,6 +2,7 @@ package cleancode.minesweeper.tobe.io;
 
 import cleancode.minesweeper.tobe.GameBoard;
 import cleancode.minesweeper.tobe.exception.GameException;
+import cleancode.minesweeper.tobe.position.CellPosition;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -22,7 +23,8 @@ public class ConsoleOutputHandler implements OutputHandler {
         for (int row = 0; row < gameBoard.getRowSize(); row++) {
             System.out.printf("%2d  ", row + 1);
             for (int column = 0; column < gameBoard.getColumnSize(); column++) {
-                System.out.print(gameBoard.getSign(row, column) + " ");
+                CellPosition cellPosition = CellPosition.of(row, column);
+                System.out.print(gameBoard.getSign(cellPosition) + " ");
             }
             System.out.println();
         }

@@ -1,15 +1,15 @@
 package cleancode.minesweeper.tobe;
 
 import cleancode.minesweeper.tobe.cell.Cell;
+import cleancode.minesweeper.tobe.cell.Cells;
 import cleancode.minesweeper.tobe.cell.EmptyCell;
 import cleancode.minesweeper.tobe.cell.LandMineCell;
 import cleancode.minesweeper.tobe.cell.NumberCell;
 import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 import cleancode.minesweeper.tobe.position.CellPosition;
+import cleancode.minesweeper.tobe.position.CellPositions;
 import cleancode.minesweeper.tobe.position.RelativePosition;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameBoard {
@@ -27,37 +27,42 @@ public class GameBoard {
     }
 
     public void initializeGame() {
-        // board에 UI를 입력하는 과정
-        for (int row = 0; row < rowSize; row++) {
-            for (int column = 0; column < columnSize; column++) {
-                board[row][column] = new EmptyCell();
+        CellPositions cellPositions = CellPositions.from(board);
+
+        initializeEmptyCells(cellPositions);
+
+        List<CellPosition> landminePositions = cellPositions.extractRandomPositions(landMineCount);
+        initializeLandmineCells(landminePositions);
+
+        List<CellPosition> numberPositionCandidates = cellPositions.subtract(landminePositions);
+        initializeNumberCells(numberPositionCandidates);
+    }
+
+    private void initializeNumberCells(List<CellPosition> numberPositionCandidates) {
+        for (CellPosition candidatePosition : numberPositionCandidates) {
+            int count = countNearByLandMines(candidatePosition);
+
+            if (count != 0) {
+                updateCellAtPosition(candidatePosition, new NumberCell(count));
             }
         }
+    }
 
-        // board에 10개의 mine을 심는 과정, 중복이 될 수 있을 것으로 보임
-        // 총 10개 이하의 mine이 생성될 것으로 유추됨
-        for (int i = 0; i < landMineCount; i++) {
-            int col = new Random().nextInt(columnSize);
-            int row = new Random().nextInt(rowSize);
-            board[row][col] = new LandMineCell();
+    private void initializeLandmineCells(List<CellPosition> landminePositions) {
+        for (CellPosition position : landminePositions) {
+            updateCellAtPosition(position, new LandMineCell());
         }
+    }
 
-        // 모든 칸을 돌면서
-        for (int row = 0; row < rowSize; row++) {
-            for (int column = 0; column < columnSize; column++) {
-                CellPosition cellPosition = CellPosition.of(row, column);
-                if (isLandMineCell(cellPosition)) {
-                    continue;
-                }
-                int count = countNearByLandMines(cellPosition);
-
-                if (count == 0) {
-                    continue;
-                }
-
-                board[row][column] = new NumberCell(count);
-            }
+    private void initializeEmptyCells(CellPositions cellPositions) {
+        List<CellPosition> allPositions = cellPositions.getPositions();
+        for (CellPosition position : allPositions) {
+            updateCellAtPosition(position, new EmptyCell());
         }
+    }
+
+    private void updateCellAtPosition(CellPosition position, Cell cell) {
+        board[position.getRowIndex()][position.getColumnIndex()] = cell;
     }
 
     public int countNearByLandMines(CellPosition cellPosition) {
@@ -138,9 +143,8 @@ public class GameBoard {
     }
 
     public boolean isAllCellChecked() {
-        return Arrays.stream(board)
-                .flatMap(Arrays::stream)
-                .allMatch(Cell::isChecked);
+        return Cells.from(board)
+                .isAllChecked();
     }
 
     public boolean isInvalidCellPosition(CellPosition cellPosition) {

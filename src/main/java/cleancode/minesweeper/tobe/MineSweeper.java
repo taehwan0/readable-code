@@ -7,6 +7,7 @@ import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 import cleancode.minesweeper.tobe.io.InputHandler;
 import cleancode.minesweeper.tobe.io.OutputHandler;
 import cleancode.minesweeper.tobe.position.CellPosition;
+import cleancode.minesweeper.tobe.user.UserAction;
 
 public class MineSweeper implements GameInitializable, GameRunnable {
 
@@ -45,9 +46,9 @@ public class MineSweeper implements GameInitializable, GameRunnable {
                 }
 
                 CellPosition cellPosition = getCellInputFromUser();
-                String userActionInput = getActionInputFromUser();
+                UserAction userAction = getActionInputFromUser();
 
-                actOnCell(cellPosition, userActionInput);
+                actOnCell(cellPosition, userAction);
             } catch (GameException e) {
                 outputHandler.showExceptionMessage(e);
             } catch (Exception e) {
@@ -56,14 +57,14 @@ public class MineSweeper implements GameInitializable, GameRunnable {
         }
     }
 
-    private void actOnCell(CellPosition cellPosition, String userActionInput) {
+    private void actOnCell(CellPosition cellPosition, UserAction userAction) {
 
-        if (isFlagAction(userActionInput)) {
+        if (isFlagAction(userAction)) {
             gameBoard.flagAt(cellPosition);
             checkGameIsOver();
             return;
         }
-        if (isOpenCellAction(userActionInput)) {
+        if (isOpenCellAction(userAction)) {
             if (gameBoard.isLandMineCell(cellPosition)) {
                 gameBoard.findCell(cellPosition).open();
                 setGameStatusToLose();
@@ -110,16 +111,16 @@ public class MineSweeper implements GameInitializable, GameRunnable {
     }
 
 
-    private boolean isOpenCellAction(String userActionInput) {
-        return userActionInput.equals("1");
+    private boolean isOpenCellAction(UserAction userAction) {
+        return UserAction.OPEN == userAction;
     }
 
-    private boolean isFlagAction(String userActionInput) {
-        return userActionInput.equals("2");
+    private boolean isFlagAction(UserAction userAction) {
+        return UserAction.FLAG == userAction;
     }
 
-    private String getActionInputFromUser() {
+    private UserAction getActionInputFromUser() {
         outputHandler.showInputUserActionComment();
-        return inputHandler.getUserInput();
+        return inputHandler.getUserActionFromUser();
     }
 }

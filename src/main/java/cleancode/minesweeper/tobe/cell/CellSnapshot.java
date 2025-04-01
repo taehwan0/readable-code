@@ -53,12 +53,16 @@ public class CellSnapshot {
         if (!(o instanceof CellSnapshot that)) {
             return false;
         }
-        
+
         return nearByLandmineCount == that.nearByLandmineCount && status == that.status;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(status, nearByLandmineCount);
+    }
+
+    public boolean isSameStatus(CellSnapshotStatus cellSnapshotStatus) {
+        return this.status == cellSnapshotStatus;
     }
 }

@@ -2,18 +2,15 @@ package cleancode.minesweeper.tobe.io;
 
 import cleancode.minesweeper.tobe.GameBoard;
 import cleancode.minesweeper.tobe.cell.CellSnapshot;
-import cleancode.minesweeper.tobe.cell.CellSnapshotStatus;
 import cleancode.minesweeper.tobe.exception.GameException;
+import cleancode.minesweeper.tobe.io.sign.CellSignProvider;
 import cleancode.minesweeper.tobe.position.CellPosition;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ConsoleOutputHandler implements OutputHandler {
 
-    private static final String FLAG_SIGN = "⚑";
-    private static final String UNCHECKED_SIGN = "□";
-    private static final String EMPTY_SIGN = "■";
-    private static final String LAND_MIND_SIGN = "☼";
+//    private final CellSignFinder cellSignFinder = new CellSignFinder();
 
     @Override
     public void showGameStartComments() {
@@ -33,37 +30,13 @@ public class ConsoleOutputHandler implements OutputHandler {
                 CellPosition cellPosition = CellPosition.of(row, column);
 
                 CellSnapshot cellSnapshot = gameBoard.getSnapshot(cellPosition);
-                String cellSign = decideCellSignFrom(cellSnapshot);
+//                String cellSign = cellSignFinder.findCellSignFrom(cellSnapshot);
+                String cellSign = CellSignProvider.findCellSignFrom(cellSnapshot);
+                System.out.print(cellSign + " ");
             }
             System.out.println();
         }
         System.out.println();
-    }
-
-    private String decideCellSignFrom(CellSnapshot cellSnapshot) {
-        CellSnapshotStatus status = cellSnapshot.getStatus();
-
-        if (status == CellSnapshotStatus.EMPTY) {
-            return EMPTY_SIGN;
-        }
-
-        if (status == CellSnapshotStatus.FLAG) {
-            return FLAG_SIGN;
-        }
-
-        if (status == CellSnapshotStatus.UNCHECKED) {
-            return UNCHECKED_SIGN;
-        }
-
-        if (status == CellSnapshotStatus.LAND_MINE) {
-            return LAND_MIND_SIGN;
-        }
-
-        if (status == CellSnapshotStatus.NUMBER) {
-            return String.valueOf(cellSnapshot.getNearByLandmineCount());
-        }
-
-        throw new IllegalStateException("Unexpected cell snapshot status: " + status);
     }
 
     private String generateColumnAlphabets(int columnSize) {

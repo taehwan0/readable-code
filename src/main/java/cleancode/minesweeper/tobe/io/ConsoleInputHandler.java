@@ -31,11 +31,8 @@ public class ConsoleInputHandler implements InputHandler {
     public CellPosition getCellPositionFromUserInput() {
         String userInput = SCANNER.nextLine();
 
-        char columInput = userInput.charAt(0);
-        String rowInput = String.valueOf(userInput.charAt(1));
-
-        int columnIndex = boardIndexConverter.convertColumnFrom(columInput);
-        int rowIndex = boardIndexConverter.convertRowFrom(rowInput);
+        int rowIndex = boardIndexConverter.convertRowFrom(userInput);
+        int columnIndex = boardIndexConverter.convertColumnFrom(userInput);
 
         return CellPosition.of(rowIndex, columnIndex);
     }

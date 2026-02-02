@@ -6,7 +6,7 @@ import cleancode.studycafe.mytobe.io.OutputHandler;
 import cleancode.studycafe.mytobe.io.StudyCafeFileHandler;
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
-import cleancode.studycafe.tobe.model.StudyCafePassType;
+import cleancode.studycafe.mytobe.model.StudyCafePassType;
 import java.util.List;
 
 public class StudyCafePassMachine {

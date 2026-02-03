@@ -11,8 +11,13 @@ import java.util.List;
 
 public class StudyCafePassMachine {
 
-	private final InputHandler inputHandler = new InputHandler();
-	private final OutputHandler outputHandler = new OutputHandler();
+	private final InputHandler inputHandler;
+	private final OutputHandler outputHandler;
+
+	public StudyCafePassMachine(InputHandler inputHandler, OutputHandler outputHandler) {
+		this.inputHandler = inputHandler;
+		this.outputHandler = outputHandler;
+	}
 
 	public void run() {
 		try {

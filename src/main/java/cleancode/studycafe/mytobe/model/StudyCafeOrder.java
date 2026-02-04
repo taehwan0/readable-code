@@ -28,4 +28,14 @@ public class StudyCafeOrder {
     public Optional<StudyCafeLockerPass> getStudyCafeLockerPass() {
         return Optional.ofNullable(studyCafeLockerPass);
     }
+
+    public int getDiscountPrice() {
+        return (int) (studyCafePass.getPrice() * studyCafePass.getDiscountRate());
+    }
+
+    public int getTotalPrice() {
+        return studyCafePass.getPrice()
+                - getDiscountPrice()
+                + getStudyCafeLockerPass().map(StudyCafeLockerPass::getPrice).orElse(0);
+    }
 }

@@ -3,7 +3,6 @@ package cleancode.studycafe.mytobe;
 import cleancode.studycafe.mytobe.exception.AppException;
 import cleancode.studycafe.mytobe.io.InputHandler;
 import cleancode.studycafe.mytobe.io.OutputHandler;
-import cleancode.studycafe.mytobe.io.StudyCafeFileHandler;
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
 import cleancode.studycafe.mytobe.model.StudyCafePassType;
@@ -15,7 +14,6 @@ public class StudyCafePassMachine {
     private final InputHandler inputHandler;
     private final OutputHandler outputHandler;
     private final StudyCafePassSelector studyCafePassSelector = new StudyCafePassSelector();
-    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
 
     public StudyCafePassMachine(InputHandler inputHandler, OutputHandler outputHandler) {
         this.inputHandler = inputHandler;

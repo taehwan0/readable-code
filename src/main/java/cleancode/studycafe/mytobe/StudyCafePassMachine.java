@@ -30,29 +30,33 @@ public class StudyCafePassMachine {
 
             List<StudyCafePass> studyCafePasses = studyCafePassSelector.getPassesByType(studyCafePassType);
             outputHandler.showPassListForSelection(studyCafePasses);
-            StudyCafePass selectedPass = inputHandler.getSelectPass(studyCafePasses);
+            StudyCafePass studyCafePass = inputHandler.getSelectPass(studyCafePasses);
+            Optional<StudyCafeLockerPass> lockerPassCandidate = selectLockerPass(studyCafePass);
 
-            if (studyCafePassType == StudyCafePassType.FIXED) {
-                Optional<StudyCafeLockerPass> lockerPass = studyCafePassSelector.getLockerPassByStudyCafePass(selectedPass);
-
-                boolean lockerSelection = false;
-                if (lockerPass.isPresent()) {
-                    outputHandler.askLockerPass(lockerPass.get());
-                    lockerSelection = inputHandler.getLockerSelection();
-                }
-
-                if (lockerSelection) {
-                    outputHandler.showPassOrderSummary(selectedPass, lockerPass.get());
-                } else {
-                    outputHandler.showPassOrderSummary(selectedPass, null);
-                }
-
-            }
-            outputHandler.showPassOrderSummary(selectedPass, null);
+            outputHandler.showPassOrderSummary(studyCafePass, lockerPassCandidate);
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
             outputHandler.showSimpleMessage("알 수 없는 오류가 발생했습니다.");
         }
+    }
+
+    private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafePass selectedStudyCafePass) {
+        if (selectedStudyCafePass.getPassType() != StudyCafePassType.FIXED) {
+            return Optional.empty();
+        }
+
+        Optional<StudyCafeLockerPass> lockerPass = studyCafePassSelector.getLockerPassByStudyCafePass(selectedStudyCafePass);
+
+        if (lockerPass.isPresent()) {
+            outputHandler.askLockerPass(lockerPass.get());
+            boolean isLockerSelected = inputHandler.getLockerSelection();
+
+            if (isLockerSelected) {
+                return lockerPass;
+            }
+        }
+
+        return Optional.empty();
     }
 }

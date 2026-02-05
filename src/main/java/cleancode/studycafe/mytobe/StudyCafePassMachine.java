@@ -3,6 +3,7 @@ package cleancode.studycafe.mytobe;
 import cleancode.studycafe.mytobe.exception.AppException;
 import cleancode.studycafe.mytobe.io.InputHandler;
 import cleancode.studycafe.mytobe.io.OutputHandler;
+import cleancode.studycafe.mytobe.io.StudyCafeFileHandler;
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.mytobe.model.StudyCafeOrder;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
@@ -14,11 +15,12 @@ public class StudyCafePassMachine {
 
     private final InputHandler inputHandler;
     private final OutputHandler outputHandler;
-    private final StudyCafePassSelector studyCafePassSelector = new StudyCafePassSelector();
+    private final PassSelector passSelector;
 
-    public StudyCafePassMachine(InputHandler inputHandler, OutputHandler outputHandler) {
+    public StudyCafePassMachine(InputHandler inputHandler, OutputHandler outputHandler, StudyCafeFileHandler studyCafeFileHandler) {
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
+        this.passSelector = new PassSelector(studyCafeFileHandler.readStudyCafePasses(), studyCafeFileHandler.readLockerPasses());
     }
 
     public void run() {
@@ -29,10 +31,10 @@ public class StudyCafePassMachine {
             outputHandler.askPassTypeSelection();
             StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
 
-            List<StudyCafePass> studyCafePasses = studyCafePassSelector.getPassesByType(studyCafePassType);
+            List<StudyCafePass> studyCafePasses = passSelector.selectStudyPassesByType(studyCafePassType);
             outputHandler.showPassListForSelection(studyCafePasses);
             StudyCafePass studyCafePass = inputHandler.getSelectPass(studyCafePasses);
-            StudyCafeLockerPass studyCafeLockerPass = selectLockerPass(studyCafePass);
+            StudyCafeLockerPass studyCafeLockerPass = selectLockerPassByStudyPassType(studyCafePass);
 
             StudyCafeOrder studyCafeOrder = StudyCafeOrder.of(studyCafePass, studyCafeLockerPass);
 
@@ -44,12 +46,12 @@ public class StudyCafePassMachine {
         }
     }
 
-    private StudyCafeLockerPass selectLockerPass(StudyCafePass selectedStudyCafePass) {
+    private StudyCafeLockerPass selectLockerPassByStudyPassType(StudyCafePass selectedStudyCafePass) {
         if (selectedStudyCafePass.getPassType() != StudyCafePassType.FIXED) {
             return null;
         }
 
-        Optional<StudyCafeLockerPass> lockerPassCandidate = studyCafePassSelector.getLockerPassByStudyCafePass(selectedStudyCafePass);
+        Optional<StudyCafeLockerPass> lockerPassCandidate = passSelector.selectMatchingLockerPass(selectedStudyCafePass);
 
         if (lockerPassCandidate.isPresent()) {
             StudyCafeLockerPass lockerPass = lockerPassCandidate.get();

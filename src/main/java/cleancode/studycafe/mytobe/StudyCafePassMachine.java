@@ -47,7 +47,7 @@ public class StudyCafePassMachine {
     }
 
     private StudyCafeLockerPass selectLockerPassByStudyPassType(StudyCafePass selectedStudyCafePass) {
-        if (selectedStudyCafePass.getPassType() != StudyCafePassType.FIXED) {
+        if (selectedStudyCafePass.cannotUseLockerPass()) {
             return null;
         }
 

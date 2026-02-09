@@ -36,10 +36,7 @@ public class PassSelector {
      */
     public Optional<StudyCafeLockerPass> selectMatchingLockerPass(StudyCafePass studyCafePass) {
         StudyCafeLockerPass studyCafeLockerPass = studyCafeLockerPasses.stream()
-                .filter(option ->
-                        option.getPassType() == studyCafePass.getPassType()
-                                && option.getDuration() == studyCafePass.getDuration()
-                )
+                .filter(option -> option.isSameTypeAndDuration(studyCafePass))
                 .findFirst()
                 .orElse(null);
 

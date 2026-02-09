@@ -1,12 +1,13 @@
 package cleancode.studycafe.mytobe;
 
 import cleancode.studycafe.mytobe.exception.AppException;
-import cleancode.studycafe.mytobe.io.StudyCafeFileHandler;
 import cleancode.studycafe.mytobe.io.StudyCafeIOHandler;
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.mytobe.model.StudyCafeOrder;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
 import cleancode.studycafe.mytobe.model.StudyCafePassType;
+import cleancode.studycafe.mytobe.provider.StudyCafeLockerPassProvider;
+import cleancode.studycafe.mytobe.provider.StudyCafePassProvider;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +16,12 @@ public class StudyCafePassMachine {
     private final StudyCafeIOHandler ioHandler;
     private final PassSelector passSelector;
 
-    public StudyCafePassMachine(StudyCafeIOHandler ioHandler, StudyCafeFileHandler studyCafeFileHandler) {
+    public StudyCafePassMachine(StudyCafeIOHandler ioHandler, StudyCafePassProvider studyCafePassProvider,
+            StudyCafeLockerPassProvider studyCafeLockerPassProvider) {
         this.ioHandler = ioHandler;
         this.passSelector = new PassSelector(
-                studyCafeFileHandler.readStudyCafePasses(),
-                studyCafeFileHandler.readLockerPasses()
+                studyCafePassProvider.getPasses(),
+                studyCafeLockerPassProvider.getLockerPasses()
         );
     }
 

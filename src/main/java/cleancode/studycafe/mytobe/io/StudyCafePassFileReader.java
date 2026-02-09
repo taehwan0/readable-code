@@ -12,11 +12,13 @@ import java.util.List;
 
 public class StudyCafePassFileReader implements StudyCafePassProvider {
 
+    private static final String PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/pass-list.csv";
+
     @Override
     public StudyCafePasses getPasses() {
         try {
             List<String> lines = Files.readAllLines(
-                    Paths.get("src/main/resources/cleancode/studycafe/pass-list.csv"));
+                    Paths.get(PASS_CSV_PATH));
             List<StudyCafePass> studyCafePasses = new ArrayList<>();
             for (String line : lines) {
                 String[] values = line.split(",");

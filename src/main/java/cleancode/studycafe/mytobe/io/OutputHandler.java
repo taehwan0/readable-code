@@ -1,8 +1,10 @@
 package cleancode.studycafe.mytobe.io;
 
+import cleancode.studycafe.mytobe.model.Pass;
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.mytobe.model.StudyCafeOrder;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
+import cleancode.studycafe.mytobe.model.StudyCafePassType;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public class OutputHandler {
         System.out.println("이용권 목록");
         for (int index = 0; index < passes.size(); index++) {
             StudyCafePass pass = passes.get(index);
-            System.out.println(String.format("%s. ", index + 1) + pass.display());
+            System.out.println(String.format("%s. ", index + 1) + displayPass(pass));
         }
     }
 
@@ -36,7 +38,7 @@ public class OutputHandler {
         System.out.println();
         String askMessage = String.format(
                 "사물함을 이용하시겠습니까? (%s)",
-                lockerPass.display()
+                displayPass(lockerPass)
         );
 
         System.out.println(askMessage);
@@ -49,8 +51,8 @@ public class OutputHandler {
 
         System.out.println();
         System.out.println("이용 내역");
-        System.out.println("이용권: " + studyCafePass.display());
-        lockerPassCandidate.ifPresent(studyCafeLockerPass -> System.out.println("사물함: " + studyCafeLockerPass.display()));
+        System.out.println("이용권: " + displayPass(studyCafePass));
+        lockerPassCandidate.ifPresent(studyCafeLockerPass -> System.out.println("사물함: " + displayPass(studyCafeLockerPass)));
 
         if (order.getDiscountPrice() > 0) {
             System.out.println("이벤트 할인 금액: " + order.getDiscountPrice() + "원");
@@ -64,4 +66,14 @@ public class OutputHandler {
         System.out.println(message);
     }
 
+    private String displayPass(Pass pass) {
+        StudyCafePassType passType = pass.getPassType();
+        int duration = pass.getDuration();
+        int price = pass.getPrice();
+
+        return switch (passType) {
+            case HOURLY -> String.format("%s시간권 - %d원", duration, price);
+            case WEEKLY, FIXED -> String.format("%s주권 - %d원", duration, price);
+        };
+    }
 }

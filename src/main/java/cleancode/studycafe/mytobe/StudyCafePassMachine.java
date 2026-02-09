@@ -17,7 +17,10 @@ public class StudyCafePassMachine {
 
     public StudyCafePassMachine(StudyCafeIOHandler ioHandler, StudyCafeFileHandler studyCafeFileHandler) {
         this.ioHandler = ioHandler;
-        this.passSelector = new PassSelector(studyCafeFileHandler.readStudyCafePasses(), studyCafeFileHandler.readLockerPasses());
+        this.passSelector = new PassSelector(
+                studyCafeFileHandler.readStudyCafePasses(),
+                studyCafeFileHandler.readLockerPasses()
+        );
     }
 
     public void run() {

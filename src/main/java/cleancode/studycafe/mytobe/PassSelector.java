@@ -1,17 +1,19 @@
 package cleancode.studycafe.mytobe;
 
 import cleancode.studycafe.mytobe.model.StudyCafeLockerPass;
+import cleancode.studycafe.mytobe.model.StudyCafeLockerPasses;
 import cleancode.studycafe.mytobe.model.StudyCafePass;
 import cleancode.studycafe.mytobe.model.StudyCafePassType;
+import cleancode.studycafe.mytobe.model.StudyCafePasses;
 import java.util.List;
 import java.util.Optional;
 
 public class PassSelector {
 
-    private final List<StudyCafePass> studyCafePasses;
-    private final List<StudyCafeLockerPass> studyCafeLockerPasses;
+    private final StudyCafePasses studyCafePasses;
+    private final StudyCafeLockerPasses studyCafeLockerPasses;
 
-    public PassSelector(List<StudyCafePass> studyCafePasses, List<StudyCafeLockerPass> studyCafeLockerPasses) {
+    public PassSelector(StudyCafePasses studyCafePasses, StudyCafeLockerPasses studyCafeLockerPasses) {
         this.studyCafePasses = studyCafePasses;
         this.studyCafeLockerPasses = studyCafeLockerPasses;
     }
@@ -23,9 +25,7 @@ public class PassSelector {
      * @return StudyCafePassType에 해당하는 StudyCafePass
      */
     public List<StudyCafePass> selectStudyPassesByType(StudyCafePassType studyCafePassType) {
-        return studyCafePasses.stream()
-                .filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
-                .toList();
+        return studyCafePasses.findByPass(studyCafePassType);
     }
 
     /**
@@ -35,11 +35,6 @@ public class PassSelector {
      * @return 선택한 StudyCafePass에 해당하는 LockerPass
      */
     public Optional<StudyCafeLockerPass> selectMatchingLockerPass(StudyCafePass studyCafePass) {
-        StudyCafeLockerPass studyCafeLockerPass = studyCafeLockerPasses.stream()
-                .filter(option -> option.isSameTypeAndDuration(studyCafePass))
-                .findFirst()
-                .orElse(null);
-
-        return Optional.ofNullable(studyCafeLockerPass);
+        return studyCafeLockerPasses.findMatchingLockerPass(studyCafePass);
     }
 }

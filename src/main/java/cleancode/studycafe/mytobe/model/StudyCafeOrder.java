@@ -29,6 +29,10 @@ public class StudyCafeOrder {
         return Optional.ofNullable(studyCafeLockerPass);
     }
 
+    public boolean isDiscounted() {
+        return studyCafePass.getDiscountRate() > 0;
+    }
+
     public int getDiscountPrice() {
         return (int) (studyCafePass.getPrice() * studyCafePass.getDiscountRate());
     }

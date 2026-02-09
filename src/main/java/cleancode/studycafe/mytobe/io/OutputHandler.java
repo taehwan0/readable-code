@@ -54,7 +54,7 @@ public class OutputHandler {
         System.out.println("이용권: " + displayPass(studyCafePass));
         lockerPassCandidate.ifPresent(studyCafeLockerPass -> System.out.println("사물함: " + displayPass(studyCafeLockerPass)));
 
-        if (order.getDiscountPrice() > 0) {
+        if (order.isDiscounted()) {
             System.out.println("이벤트 할인 금액: " + order.getDiscountPrice() + "원");
         }
 
